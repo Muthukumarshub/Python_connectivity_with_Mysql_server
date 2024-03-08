@@ -1,0 +1,65 @@
+from tabulate import tabulate
+import mysql.connector 
+con=mysql.connector.connect(host="localhost",user="root",password="root",database="mk")
+if con:
+    print("Connected")
+else:
+    print("Not connected")
+
+def insert(name,age,city):
+    res=con.cursor()
+    sql="insert into muthu(name,age,city) values(%s,%s,%s)"
+    user=(name,age,city)
+    res.execute(sql,user)
+    con.commit()
+    print("Inserted successfully")
+
+def update(name,age,city,id):
+    res=con.cursor()
+    sql="update muthu set name=%s, age=%s, city=%s where id=%s"
+    user=(name,age,city,id)
+    res.execute(sql,user)
+    con.commit()
+    print("Update successfully")
+def delete(id):
+    res=con.cursor()
+    sql="delete from muthu where id=%s"
+    user=(id,)
+    res.execute(sql,user)
+    con.commit()
+    print("Deleted successfully")
+def select():
+    res=con.cursor()
+    sql="select id,name,age,city from muthu"
+    res.execute(sql)
+    result=res.fetchall()
+    print(tabulate(result,headers=["id","name", "age", "city"]))
+
+while True:
+    print("1.Insert")
+    print("2.Update")
+    print("3.Delete")
+    print("4.Select")
+    print("5.Exit")
+    c=int(input("Enter your choice : "))
+    if c==1:
+        name=input("Enter your name:")
+        age=input("Enter your age:")
+        city=input("Enter your city name:")
+        insert(name,age,city)
+    elif c==2:
+        id=input("Enter the id to update :")
+        name=input("Enter the name :")
+        age=input("Enter the age :")
+        city=input("Enter the city :")
+        
+        update(name,age,city,id)
+    elif c==3:
+         id=input("Enter the id to delete:")
+         delete(id)
+    elif c==4:
+        select()
+    elif c==5:
+        quit()
+    else:
+        print("Invalid request! Please try again")
